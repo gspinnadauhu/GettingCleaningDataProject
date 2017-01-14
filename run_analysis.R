@@ -66,6 +66,6 @@ testing_set<-testing_set[c(2,1,3:563)]
 ##Labeling testing set w/the variables with the feature key
 colnames(testing_set)[c(3:563)]<-feature_key$feature
 
-
+#Re-shape and combine test and train sets
 
 
