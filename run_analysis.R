@@ -19,6 +19,7 @@ names(feature_key)<-c("number","feature")
 ##Tidy up activity and feature variables
 activity_key$activity<-tolower(gsub("_","",activity_key$activity))
 feature_key$feature<-gsub("[[:punct:]]","",feature_key$feature)
+
 #Training data sets
 ##Loading sets
 train_subject<-read.table(paste0(datadir,"train/subject_train.txt"))
@@ -33,7 +34,7 @@ training_set<-cbind(train_subject,train_values)
 ###labeling the train labels vector
 names(train_activity_numeric)<-"code"
 library(dplyr)
-train_activity<-right_join(activity_key,train_labels_numeric,by="code")
+train_activity<-right_join(activity_key,train_activity_numeric,by="code")
 ###binding activity labels to training set
 training_set<-cbind(train_activity$activity,training_set)
 colnames(training_set)[1]<-"activity"
@@ -42,7 +43,28 @@ training_set<-training_set[c(2,1,3:563)]
 ##Labeling training set w/the variables with the feature key
 colnames(training_set)[c(3:563)]<-feature_key$feature
 
-
+#Test Sets
+##Loading sets
+test_subject<-read.table(paste0(datadir,"test/subject_test.txt"))
+test_activity_numeric<-read.table(paste0(datadir,"test/y_test.txt"))
+test_values<-read.table(paste0(datadir,"test/X_test.txt"))
+##Labelling subject vector and binding with value df
+###Labeling the subject vector
+names(test_subject)<-"subject"
+###Binding subject to values vector
+testing_set<-cbind(test_subject,test_values)
+##Adding activity labels to testing set
+###labeling the test labels vector
+names(test_activity_numeric)<-"code"
+library(dplyr)
+test_activity<-right_join(activity_key,test_activity_numeric,by="code")
+###binding activity labels to testing set
+testing_set<-cbind(test_activity$activity,testing_set)
+colnames(testing_set)[1]<-"activity"
+###re-arrange so subject nr is first variable
+testing_set<-testing_set[c(2,1,3:563)]
+##Labeling testing set w/the variables with the feature key
+colnames(testing_set)[c(3:563)]<-feature_key$feature
 
 
 
