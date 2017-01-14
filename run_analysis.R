@@ -8,24 +8,41 @@ unzip("./data/exercise_dataset.zip",overwrite=TRUE,exdir="./data/")
 datalist<-list.files("./data/")
 datadir<-paste0("./data/",datalist[2],"/")
 list.files(datadir)
-#Loading column label key df
+#Loading activity label key df
 library(data.table)
-label_key<-read.table(paste0(datadir,"activity_labels.txt"))
-view(label_key)
-names(label_key)<-c("code","label")
-##Tidy up label names
-label_key$label<-gsub("_","",label_key$label)
+activity_key<-read.table(paste0(datadir,"activity_labels.txt"))
+view(activity_key)
+names(activity_key)<-c("code","activity")
+#loading feature label dfs - will become variable labels for training set
+feature_key<-read.table(paste0(datadir,"features.txt"))
+names(feature_key)<-c("number","feature")
+##Tidy up activity and feature variables
+activity_key$activity<-tolower(gsub("_","",activity_key$activity))
+feature_key$feature<-gsub("[[:punct:]]","",feature_key$feature)
 #Training data sets
 ##Loading sets
 train_subject<-read.table(paste0(datadir,"train/subject_train.txt"))
-train_labels_numeric<-read.table(paste0(datadir,"train/y_train.txt"))
+train_activity_numeric<-read.table(paste0(datadir,"train/y_train.txt"))
 train_values<-read.table(paste0(datadir,"train/X_train.txt"))
-##Labelling subject vector and combining binding with value df
+##Labelling subject vector and binding with value df
 ###Labeling the subject vector
-names(train_subject)<-c("subject")
-###Binding to values vector
+names(train_subject)<-"subject"
+###Binding subject to values vector
 training_set<-cbind(train_subject,train_values)
-##Matching training label codes with names
+##Adding activity labels to training set
+###labeling the train labels vector
+names(train_activity_numeric)<-"code"
+library(dplyr)
+train_activity<-right_join(activity_key,train_labels_numeric,by="code")
+###binding activity labels to training set
+training_set<-cbind(train_activity$activity,training_set)
+colnames(training_set)[1]<-"activity"
+###re-arrange so subject nr is first variable
+training_set<-training_set[c(2,1,3:563)]
+##Labeling training set w/the variables with the feature key
+colnames(training_set)[c(3:563)]<-feature_key$feature
+
+
 
 
 
