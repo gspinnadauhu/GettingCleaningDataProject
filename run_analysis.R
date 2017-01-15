@@ -42,6 +42,12 @@ colnames(training_set)[1]<-"activity"
 training_set<-training_set[c(2,1,3:563)]
 ##Labeling training set w/the variables with the feature key
 colnames(training_set)[c(3:563)]<-feature_key$feature
+##creating reading variable to show sequence each reading by subj and activity
+subj_act<-data.table(paste0(training_set$subject,training_set$activity))
+subj_act<-subj_act %>% group_by(V1) %>% mutate(reading = seq_along(V1))
+training_set<-cbind(subj_act$reading,training_set)
+training_set<-training_set[c(2,1,3:564)]
+colnames(training_set)[2]<-"reading"
 
 #Test Sets
 ##Loading sets
@@ -65,6 +71,12 @@ colnames(testing_set)[1]<-"activity"
 testing_set<-testing_set[c(2,1,3:563)]
 ##Labeling testing set w/the variables with the feature key
 colnames(testing_set)[c(3:563)]<-feature_key$feature
+##creating reading variable to show sequence each reading by subj and activity
+subj_act_test<-data.table(paste0(testing_set$subject,testing_set$activity))
+subj_act_test<-subj_act_test %>% group_by(V1) %>% mutate(reading = seq_along(V1))
+testing_set<-cbind(subj_act_test$reading,testing_set)
+testing_set<-testing_set[c(2,1,3:564)]
+colnames(testing_set)[2]<-"reading"
 
 #Re-shape and combine test and train sets
 
