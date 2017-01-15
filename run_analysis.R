@@ -1,3 +1,5 @@
+#Parts specific to Assignment Requirements Mentioned by Requirement Number 1-5
+
 #Download & Unzip
 if(!file.exists("data")){
         dir.create("data")
@@ -31,7 +33,7 @@ names(train_subject)<-"subject"
 ###Binding subject to values vector
 training_set<-cbind(train_subject,train_values)
 ##Adding activity labels to training set
-###labeling the train labels vector
+###Number 3 (1/2): labeling the train labels vector
 names(train_activity_numeric)<-"code"
 library(dplyr)
 train_activity<-right_join(activity_key,train_activity_numeric,by="code")
@@ -40,7 +42,7 @@ training_set<-cbind(train_activity$activity,training_set)
 colnames(training_set)[1]<-"activity"
 ###re-arrange so subject nr is first variable
 training_set<-training_set[c(2,1,3:563)]
-##Labeling training set w/the variables with the feature key
+##Number 4(1/2): Labeling training set w/the variables with the feature key
 colnames(training_set)[c(3:563)]<-feature_key$feature
 ##creating reading variable to show sequence each reading by subj and activity
 subj_act<-data.table(paste0(training_set$subject,training_set$activity))
@@ -60,7 +62,7 @@ names(test_subject)<-"subject"
 ###Binding subject to values vector
 testing_set<-cbind(test_subject,test_values)
 ##Adding activity labels to testing set
-###labeling the test labels vector
+###Number 3(2/2): labeling the test labels vector
 names(test_activity_numeric)<-"code"
 library(dplyr)
 test_activity<-right_join(activity_key,test_activity_numeric,by="code")
@@ -69,7 +71,7 @@ testing_set<-cbind(test_activity$activity,testing_set)
 colnames(testing_set)[1]<-"activity"
 ###re-arrange so subject nr is first variable
 testing_set<-testing_set[c(2,1,3:563)]
-##Labeling testing set w/the variables with the feature key
+##Number 4(2/2): Labeling testing set w/the variables with the feature key
 colnames(testing_set)[c(3:563)]<-feature_key$feature
 ##creating reading variable to show sequence each reading by subj and activity
 subj_act_test<-data.table(paste0(testing_set$subject,testing_set$activity))
@@ -78,6 +80,13 @@ testing_set<-cbind(subj_act_test$reading,testing_set)
 testing_set<-testing_set[c(2,1,3:564)]
 colnames(testing_set)[2]<-"reading"
 
-#Re-shape and combine test and train sets
+#Number 1: Merges the training and the test sets to create one data set.
+tidy_set<-rbindlist(list(training_set,testing_set),use.names=TRUE)
 
+#Number 2: Extracts only the measurements on the mean and standard deviation for each measurement.
+tidy_set_final<-select(tidy_set,subject,reading,activity,contains("mean"),contains("std"))
 
+#Number 5: 2nd tiny set for averages
+second_tidy_set<-tidy_set_final %>%
+        group_by(activity,subject) %>%
+        summarise_each(funs(mean),4:89)
