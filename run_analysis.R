@@ -86,11 +86,11 @@ tidy_set<-rbindlist(list(training_set,testing_set),use.names=TRUE)
 #Number 2: Extracts only the measurements on the mean and standard deviation for each measurement.
 tidy_set_final<-select(tidy_set,subject,reading,activity,contains("mean"),contains("std"))
 
-#Number 5: 2nd tiny set for averages
-second_tidy_set<-tidy_set_final %>%
-        group_by(activity,subject) %>%
-        summarise_each(funs(mean),4:89)
-colnames(second_tidy_set)[3:88] <- paste0("Mean", colnames(second_tidy_set)[3:88])
+##Number 5: 2nd tiny set for averages
+#second_tidy_set<-tidy_set_final %>%
+#        group_by(activity,subject) %>%
+#        summarise_each(funs(mean),4:89)
+#colnames(second_tidy_set)[3:88] <- paste0("Mean", colnames(second_tidy_set)[3:88])
 
 #exporting 2nd file
-write.table(second_tidy_set,"finaltidyset.txt",row.name=FALSE)
+#write.table(second_tidy_set,"finaltidyset.txt",row.name=FALSE)
