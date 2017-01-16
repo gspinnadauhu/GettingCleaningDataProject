@@ -91,3 +91,6 @@ second_tidy_set<-tidy_set_final %>%
         group_by(activity,subject) %>%
         summarise_each(funs(mean),4:89)
 colnames(second_tidy_set)[3:88] <- paste0("Mean", colnames(second_tidy_set)[3:88])
+
+#exporting 2nd file
+write.table(second_tidy_set,"finaltidyset.txt",row.names=FALSE)
