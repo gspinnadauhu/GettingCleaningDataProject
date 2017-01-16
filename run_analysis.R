@@ -93,4 +93,4 @@ second_tidy_set<-tidy_set_final %>%
 colnames(second_tidy_set)[3:88] <- paste0("Mean", colnames(second_tidy_set)[3:88])
 
 #exporting 2nd file
-write.table(second_tidy_set,"finaltidyset.txt",row.names=FALSE)
+write.table(second_tidy_set,"finaltidyset.txt",row.name=FALSE)
