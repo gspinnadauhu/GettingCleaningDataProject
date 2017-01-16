@@ -90,3 +90,4 @@ tidy_set_final<-select(tidy_set,subject,reading,activity,contains("mean"),contai
 second_tidy_set<-tidy_set_final %>%
         group_by(activity,subject) %>%
         summarise_each(funs(mean),4:89)
+colnames(second_tidy_set)[3:88] <- paste0("Mean", colnames(second_tidy_set)[3:88])
